@@ -8,21 +8,17 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controller.RegistrationController"
+            fx:controller="controller.LoginController"
             prefHeight="400.0" prefWidth="600.0">
     <children>
-        <VBox alignment="CENTER" spacing="10.0" layoutX="150.0" layoutY="50.0">
+        <VBox alignment="CENTER" spacing="10.0" layoutX="150.0" layoutY="100.0">
             <children>
-                <Label text="Регистрация"/>
-                <TextField fx:id="addressField" promptText="Адрес"/>
-                <TextField fx:id="firstNameField" promptText="Имя"/>
-                <TextField fx:id="lastNameField" promptText="Фамилия"/>
-                <TextField fx:id="middleNameField" promptText="Отчество"/>
+                <Label text="Вход"/>
                 <TextField fx:id="passportSeriesField" promptText="Серия паспорта"/>
                 <TextField fx:id="passportNumberField" promptText="Номер паспорта"/>
                 <PasswordField fx:id="passwordField" promptText="Пароль"/>
-                <Button text="Зарегистрироваться" onAction="#handleRegister"/>
-                <Button text="Уже есть аккаунт?" onAction="#switchToLogin"/>
+                <Button text="Войти" onAction="#handleLogin"/>
+                <Button text="Регистрация" onAction="#switchToRegister"/>
             </children>
         </VBox>
     </children>

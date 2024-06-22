@@ -1,5 +1,6 @@
 
 
+import controller.LoginController;
 import model.Model;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,11 +12,11 @@ import controller.MainMenuController;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainMenuView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginView.fxml"));
 
         Parent root = loader.load();
 
-        MainMenuController controller = loader.getController();
+        LoginController controller = loader.getController();
         Model model = new Model();
         controller.initModel(model, primaryStage);
         model.getAllBikeModels();
