@@ -17,7 +17,7 @@
         <Label layoutX="50.0" layoutY="150.0" text="Модель велосипеда:" />
         <ComboBox fx:id="bikeModel" layoutX="200.0" layoutY="145.0" />
 
-        <Button layoutX="250.0" layoutY="200.0" onAction="#handleBooking" text="Забронировать" />
+        <Button fx:id="bookingButton" layoutX="250.0" layoutY="200.0" onAction="#handleBooking" text="Забронировать" />
       <Button layoutX="253.0" layoutY="265.0" mnemonicParsing="false" onAction="#exitToMainMenu" text="Главное меню" />
     </children>
 </AnchorPane>

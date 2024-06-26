@@ -8,5 +8,6 @@
         <Button fx:id="rentBikeButton" layoutX="218.0" layoutY="110.0" text="Забронировать велосипед" />
         <Button fx:id="returnBikeButton" layoutX="234.0" layoutY="146.0" text="Личная информация" />
         <Button fx:id="viewBikesButton" layoutX="250.0" layoutY="181.0" text="Мои заказы" />
+      <Button fx:id="exitButton" layoutX="266.0" layoutY="286.0" onAction="#exit" text="Выйти" />
     </children>
 </AnchorPane>

@@ -23,6 +23,9 @@ public class MainMenuController {
     @FXML
     private Button viewBikesButton;
 
+    @FXML
+    private Button exitButton;
+
     public void initModel(Model model, Stage primaryStage) {
         this.model = model;
         this.primaryStage = primaryStage;
@@ -34,8 +37,6 @@ public class MainMenuController {
                 throw new RuntimeException(ex);
             }
         });
-        returnBikeButton.setOnAction(e -> showReturnBikeView());
-        viewBikesButton.setOnAction(e -> showViewBikesView());
     }
 
     private void showRentBikeView() throws IOException {
@@ -49,11 +50,15 @@ public class MainMenuController {
         primaryStage.show();
     }
 
-    private void showReturnBikeView() {
-        // Логика для показа экрана возврата велосипеда
+    public void exit() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginView.fxml"));
+
+        Parent root = loader.load();
+        LoginController controller = loader.getController();
+        controller.initModel(model, primaryStage);
+        primaryStage.setScene(new Scene(root, 1280, 720));
+
+        primaryStage.show();
     }
 
-    private void showViewBikesView() {
-        // Логика для показа экрана просмотра велосипедов
-    }
 }

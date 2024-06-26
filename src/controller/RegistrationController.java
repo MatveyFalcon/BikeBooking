@@ -90,6 +90,7 @@ public class RegistrationController {
         primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.show();
     }
+
     @FXML
     private void switchToLogin() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginView.fxml"));

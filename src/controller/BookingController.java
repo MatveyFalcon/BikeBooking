@@ -9,6 +9,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
+import model.BikeModel;
 import model.Model;
 import model.Store;
 
@@ -20,7 +21,7 @@ public class BookingController {
     private DatePicker bookingDate;
 
     @FXML
-    private ComboBox<String> bikeModel;
+    private ComboBox<BikeModel> bikeModel;
 
     @FXML
     private ComboBox<Store> store;
@@ -42,19 +43,33 @@ public class BookingController {
 
     @FXML
     private void handleBooking() {
-        String date = bookingDate.getValue() != null ? bookingDate.getValue().toString() : "не выбрано";
-        String model = bikeModel.getValue() != null ? bikeModel.getValue() : "не выбрано";
-        String storeName = store.getValue().getName() != null ? store.getValue().getName() : "не выбрано";
-        String address = store.getValue().getAddress() != null ? store.getValue().getAddress() : "не выбрано";
+        String _date = bookingDate.getValue() != null ? bookingDate.getValue().toString() : "не выбрано";
+        BikeModel selectedBikeModel = bikeModel.getValue();
+        String _bikeModel = selectedBikeModel != null ? selectedBikeModel.getName() : "не выбрано";
+        int modelId = selectedBikeModel != null ? selectedBikeModel.getId() : -1;
+        Store selectedStore = store.getValue();
+        String _storeName = selectedStore != null ? selectedStore.getName() : "не выбрано";
+        String _address = selectedStore != null ? selectedStore.getAddress() : "не выбрано";
 
-        // Здесь можно добавить логику для обработки бронирования, например, сохранение данных в БД
+        if (modelId != -1 && selectedStore != null) {
+            if(model.bookBike(modelId, selectedStore.getId(), _date)){
+                // Показ уведомления пользователю
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Бронирование");
+                alert.setHeaderText("Информация о бронировании");
+                alert.setContentText("Дата: " + _date + "\nМодель велосипеда: " + _bikeModel + "\nМагазин: " + _storeName + "\nАдрес: " + _address);
+                alert.showAndWait();
+            } else{
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Бронирование");
+                alert.setHeaderText("Информация о бронировании");
+                alert.setContentText("На данную дату нет доступных велосипедов");
+                alert.showAndWait();
+            }
 
-        // Показ уведомления пользователю
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Бронирование");
-        alert.setHeaderText("Информация о бронировании");
-        alert.setContentText("Дата: " + date + "\nМодель велосипеда: " + model + "\nМагазин: " + storeName + "\nАдрес: " + address);
-        alert.showAndWait();
+
+            }
+
     }
 
     @FXML
