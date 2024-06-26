@@ -10,7 +10,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
 import model.Model;
-import models.Store;
+import model.Store;
 
 import java.io.IOException;
 

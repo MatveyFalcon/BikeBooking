@@ -1,7 +1,5 @@
 package model;
 
-import models.Store;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,6 +14,8 @@ public class Model {
     private static final String DB_PASSWORD = "bikebookingmatvey";
 
     private Connection connection;
+
+    private Client client = new Client();
 
     public Model() {
         try {
@@ -61,6 +61,65 @@ public class Model {
 
         return stores;
     }
+
+    public int getClientId(String passportNumber, String passportSeries, String password) {
+        String query = "SELECT client_id FROM clients WHERE passport_number = ? AND passport_series = ? AND password = ?";
+        try (PreparedStatement checkStatement = connection.prepareStatement(query)) {
+            checkStatement.setString(1, passportNumber);
+            checkStatement.setString(2, passportSeries);
+            checkStatement.setString(3, password);
+
+            try (ResultSet resultSet = checkStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    this.client.setClientId(resultSet.getInt(1));
+                    return resultSet.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public boolean register(Client client) {
+        String checkQuery = "SELECT * FROM clients WHERE passport_number = ? AND passport_series = ?";
+        String insertQuery = "INSERT INTO clients (first_name, last_name, middle_name, passport_number, passport_series, address, password, is_admin) VALUES (?, ?, ?, ?, ?, ?, ?, false)";
+
+        try (PreparedStatement checkStatement = connection.prepareStatement(checkQuery)) {
+            checkStatement.setString(1, client.getPassportNumber());
+            checkStatement.setString(2, client.getPassportSeries());
+
+            try (ResultSet resultSet = checkStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return false;
+                }
+            }
+
+            try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+                insertStatement.setString(1, client.getFirstName());
+                insertStatement.setString(2, client.getLastName());
+                insertStatement.setString(3, client.getMiddleName());
+                insertStatement.setString(4, client.getPassportNumber());
+                insertStatement.setString(5, client.getPassportSeries());
+                insertStatement.setString(6, client.getAddress());
+                insertStatement.setString(7, client.getPassword());
+
+
+                int rowsAffected = insertStatement.executeUpdate();
+
+                int clientId = getClientId(client.getPassportNumber(), client.getPassportSeries(), client.getPassword());
+
+                client.setClientId(clientId);
+
+                this.client = client;
+                return rowsAffected > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     // Примерный способ бронирования велосипеда
     public boolean bookBike(int clientId, int modelId, int storeId, String bookingDate) {
@@ -113,5 +172,9 @@ public class Model {
         }
 
         return bookings;
+    }
+
+    public Client getClient() {
+        return client;
     }
 }

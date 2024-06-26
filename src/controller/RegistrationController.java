@@ -4,9 +4,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
+import model.Client;
 import model.Model;
 
 import java.io.IOException;
@@ -47,7 +49,7 @@ public class RegistrationController {
 
 
     @FXML
-    private void handleRegister() {
+    private void handleRegister() throws IOException {
         // Получаем данные из полей ввода
         String address = addressField.getText();
         String firstName = firstNameField.getText();
@@ -57,12 +59,37 @@ public class RegistrationController {
         String passportNumber = passportNumberField.getText();
         String password = passwordField.getText();
 
-        // Логика регистрации
-        // Здесь можно добавить валидацию данных и их сохранение
+        Client client = new Client(
+                0,
+                firstName,
+                lastName,
+                middleName,
+                passportNumber,
+                passportSeries,
+                address,
+                password,
+                false);
 
-        System.out.println("Регистрация завершена: " + firstName + " " + lastName);
+        if(!model.register(client)) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Ошибка");
+            alert.setHeaderText("Пользователь уже существует");
+            alert.showAndWait();
+        }
+        else{
+            switchToMainMenu();
+        }
     }
 
+    private void switchToMainMenu() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainMenuView.fxml"));
+
+        Parent root = loader.load();
+        MainMenuController controller = loader.getController();
+        controller.initModel(model, primaryStage);
+        primaryStage.setScene(new Scene(root, 1280, 720));
+        primaryStage.show();
+    }
     @FXML
     private void switchToLogin() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginView.fxml"));
