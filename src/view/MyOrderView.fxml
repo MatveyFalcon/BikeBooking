@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MyOrdersController">
+    <children>
+        <Label layoutX="10.0" layoutY="10.0" text="Bookings" />
+        <TableView fx:id="bookingTable" layoutX="10.0" layoutY="30.0" prefHeight="250.0" prefWidth="780.0">
+            <columns>
+                <TableColumn fx:id="bookingModelColumn" prefWidth="100.0" text="Model" />
+                <TableColumn fx:id="bookingStoreColumn" prefWidth="100.0" text="Store" />
+                <TableColumn fx:id="bookingDateColumn" prefWidth="150.0" text="Booking Date" />
+                <TableColumn fx:id="confirmPickupColumn" prefWidth="150.0" text="Confirm Pickup" />
+            </columns>
+        </TableView>
+        <Label layoutX="10.0" layoutY="300.0" text="Rentals" />
+        <TableView fx:id="rentalTable" layoutX="10.0" layoutY="320.0" prefHeight="250.0" prefWidth="780.0">
+            <columns>
+                <TableColumn fx:id="rentalModelColumn" prefWidth="100.0" text="Model" />
+                <TableColumn fx:id="rentalStoreColumn" prefWidth="100.0" text="Store" />
+                <TableColumn fx:id="rentalStartDateColumn" prefWidth="150.0" text="Start Date" />
+                <TableColumn fx:id="rentalEndDateColumn" prefWidth="150.0" text="End Date" />
+            </columns>
+        </TableView>
+      <Button layoutX="352.0" layoutY="574.0" mnemonicParsing="false" text="Главное меню" onAction="#exitToMainMenu" />
+    </children>
+</AnchorPane>

@@ -14,32 +14,22 @@ public class MainMenuController {
     private Model model;
     private Stage primaryStage;
 
-    @FXML
-    private Button rentBikeButton;
-
-    @FXML
-    private Button returnBikeButton;
-
-    @FXML
-    private Button viewBikesButton;
-
-    @FXML
-    private Button exitButton;
-
     public void initModel(Model model, Stage primaryStage) {
         this.model = model;
         this.primaryStage = primaryStage;
-
-        rentBikeButton.setOnAction(e -> {
-            try {
-                showRentBikeView();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
     }
 
-    private void showRentBikeView() throws IOException {
+    public void showMyOrdersView() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MyOrderView.fxml"));
+
+        Parent root = loader.load();
+        MyOrdersController controller = loader.getController();
+        controller.initModel(model, primaryStage);
+        primaryStage.setScene(new Scene(root, 1280, 720));
+
+        primaryStage.show();
+    }
+    public void showBookingBikeView() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/BookingView.fxml"));
 
         Parent root = loader.load();

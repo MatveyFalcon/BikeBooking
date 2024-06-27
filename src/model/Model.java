@@ -211,6 +211,7 @@ public class Model {
         }
         return 0;
     }
+
     private boolean isBikeAvailable(int modelId, String bookingDate, int storeId) {
         int bikeCount = getBikeCount(modelId, storeId);
         int bookingCount = getBookingCount(modelId, storeId, bookingDate);
@@ -236,4 +237,105 @@ public class Model {
         }
     }
 
+    public List<Booking> getBookingsForUser(int userId) {
+        List<Booking> bookings = new ArrayList<>();
+        String query = "SELECT b.booking_id, m.name as model, s.name as store, b.booking_date " +
+                "FROM bookings b " +
+                "JOIN models m ON b.model_id = m.model_id " +
+                "JOIN stores s ON b.store_id = s.store_id " +
+                "WHERE b.client_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    bookings.add(new Booking(
+                            resultSet.getInt("booking_id"),
+                            resultSet.getString("model"),
+                            resultSet.getString("store"),
+                            resultSet.getString("booking_date")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bookings;
+    }
+
+    public List<Rental> getRentalsForUser(int userId) {
+        List<Rental> rentals = new ArrayList<>();
+        String query = "SELECT r.rent_id, b.booking_id, m.name as model, s.name as store, r.rental_start, r.return_date " +
+                "FROM rentals r " +
+                "JOIN bookings b ON r.booking_id = b.booking_id " +
+                "JOIN models m ON b.model_id = m.model_id " +
+                "JOIN stores s ON b.store_id = s.store_id " +
+                "WHERE b.client_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    rentals.add(new Rental(
+                            resultSet.getInt("rent_id"),
+                            resultSet.getString("model"),
+                            resultSet.getString("store"),
+                            resultSet.getString("rental_start"),
+                            resultSet.getString("return_date")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rentals;
+    }
+
+    private boolean isBikeAvailableRentals(int modelId, String bookingDate, int storeId) {
+        int bikeCount = getBikeCount(modelId, storeId);
+        int bookingCount = getBookingCount(modelId, storeId, bookingDate);
+        System.out.println("Байков: " + bikeCount +  " Бронирований: " + bookingCount);
+        return bookingCount <= bikeCount;
+    }
+
+    public boolean confirmPickup(int bookingId) {
+        // Получаем информацию о бронировании
+        String bookingInfoQuery = "SELECT model_id, booking_date, store_id FROM bookings WHERE booking_id = ?";
+        try (PreparedStatement bookingInfoStmt = connection.prepareStatement(bookingInfoQuery)) {
+            bookingInfoStmt.setInt(1, bookingId);
+            try (ResultSet resultSet = bookingInfoStmt.executeQuery()) {
+                if (resultSet.next()) {
+                    int modelId = resultSet.getInt("model_id");
+                    String bookingDate = resultSet.getString("booking_date");
+                    int storeId = resultSet.getInt("store_id");
+
+                    // Проверяем доступность велосипеда
+                    if (isBikeAvailableRentals(modelId, bookingDate, storeId)) {
+                        // Выполняем вставку записи в таблицу аренд
+                        String insertQuery = "INSERT INTO rentals (booking_id, bike_id, rental_start) " +
+                                "SELECT b.booking_id, bi.bike_id, NOW() " +
+                                "FROM bookings b " +
+                                "JOIN bikes bi ON b.model_id = bi.model_id AND b.store_id = bi.store_id " +
+                                "WHERE b.booking_id = ? " +
+                                "AND NOT EXISTS (SELECT 1 FROM rentals r WHERE r.bike_id = bi.bike_id AND (r.return_date IS NULL OR r.return_date >= NOW())) " +
+                                "LIMIT 1";
+
+                        try (PreparedStatement insertStmt = connection.prepareStatement(insertQuery)) {
+                            insertStmt.setInt(1, bookingId);
+                            int rowsAffected = insertStmt.executeUpdate();
+                            if (rowsAffected > 0) {
+                                return true;
+                            }
+                        }
+                    } else {
+                        System.out.println("Нет доступных велосипедов для этого бронирования.");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
+

@@ -14,7 +14,7 @@
         <Label layoutX="50.0" layoutY="100.0" text="Магазин:" />
         <ComboBox fx:id="store" layoutX="200.0" layoutY="95.0" />
 
-        <Label layoutX="50.0" layoutY="150.0" text="Модель велосипеда:" />
+        <Label layoutX="50.0" layoutY="150.0"  text="Модель велосипеда:" />
         <ComboBox fx:id="bikeModel" layoutX="200.0" layoutY="145.0" />
 
         <Button fx:id="bookingButton" layoutX="250.0" layoutY="200.0" onAction="#handleBooking" text="Забронировать" />
