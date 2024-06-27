@@ -4,28 +4,66 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MyOrdersController">
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MyOrdersController">
     <children>
-        <Label layoutX="10.0" layoutY="10.0" text="Bookings" />
-        <TableView fx:id="bookingTable" layoutX="10.0" layoutY="30.0" prefHeight="250.0" prefWidth="780.0">
+      <ImageView fitHeight="514.0" fitWidth="1321.0" layoutX="-3.0" layoutY="206.0" opacity="0.8" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../photo/mountains.png" />
+         </image>
+      </ImageView>
+        <Text fill="#1a1a1a" layoutX="123.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ike" AnchorPane.topAnchor="42.0">
+            <font>
+                <Font name="DrukTextWideCyr-Medium" size="32.0" />
+            </font>
+        </Text>
+        <Text fill="#fc7b28" layoutX="90.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="B" AnchorPane.leftAnchor="89.6000412819587" AnchorPane.rightAnchor="1157.0719985961914" AnchorPane.topAnchor="42.0">
+            <font>
+                <Font name="DrukTextWideCyr-Bold" size="32.0" />
+            </font>
+        </Text>
+        <Text fill="#fc7b28" layoutX="184.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="B" AnchorPane.topAnchor="42.0">
+            <font>
+                <Font name="DrukTextWideCyr-Bold" size="32.0" />
+            </font>
+        </Text>
+        <Text fill="#1a1a1a" layoutX="216.30908337301486" layoutY="75.87490879783951" strokeType="OUTSIDE" strokeWidth="0.0" text="ooking" AnchorPane.leftAnchor="216.30908337301486" AnchorPane.topAnchor="41.89090763817154">
+            <font>
+                <Font name="DrukTextWideCyr-Medium" size="32.0" />
+            </font>
+        </Text>
+        <Label layoutX="553.0" layoutY="106.0" text="Бронирования">
+         <font>
+            <Font name="Gilroy-Bold" size="25.0" />
+         </font></Label>
+        <TableView fx:id="bookingTable" layoutX="388.36362289554864" layoutY="146.0" prefHeight="220.0" prefWidth="502.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #c8c8c8;" AnchorPane.leftAnchor="388.36362289554864" AnchorPane.rightAnchor="389.2363501380105">
             <columns>
-                <TableColumn fx:id="bookingModelColumn" prefWidth="100.0" text="Model" />
-                <TableColumn fx:id="bookingStoreColumn" prefWidth="100.0" text="Store" />
-                <TableColumn fx:id="bookingDateColumn" prefWidth="150.0" text="Booking Date" />
-                <TableColumn fx:id="confirmPickupColumn" prefWidth="150.0" text="Confirm Pickup" />
+                <TableColumn fx:id="bookingModelColumn" prefWidth="100.0" text="Модель" />
+                <TableColumn fx:id="bookingStoreColumn" prefWidth="100.0" text="Магазин" />
+                <TableColumn fx:id="bookingDateColumn" prefWidth="150.0" text="Дата бронирования" />
+                <TableColumn fx:id="confirmPickupColumn" prefWidth="150.0" text="Подтвердить" />
             </columns>
         </TableView>
-        <Label layoutX="10.0" layoutY="300.0" text="Rentals" />
-        <TableView fx:id="rentalTable" layoutX="10.0" layoutY="320.0" prefHeight="250.0" prefWidth="780.0">
+        <Label layoutX="593.0" layoutY="380.0" prefHeight="31.0" prefWidth="117.0" text="Аренды" AnchorPane.leftAnchor="593.0" AnchorPane.rightAnchor="571.0">
+         <font>
+            <Font name="Gilroy-Bold" size="25.0" />
+         </font></Label>
+        <TableView fx:id="rentalTable" layoutX="388.36362289554864" layoutY="418.0" prefHeight="220.0" prefWidth="502.0" AnchorPane.leftAnchor="388.36362289554864" AnchorPane.rightAnchor="389.2363501380105">
             <columns>
-                <TableColumn fx:id="rentalModelColumn" prefWidth="100.0" text="Model" />
-                <TableColumn fx:id="rentalStoreColumn" prefWidth="100.0" text="Store" />
-                <TableColumn fx:id="rentalStartDateColumn" prefWidth="150.0" text="Start Date" />
-                <TableColumn fx:id="rentalEndDateColumn" prefWidth="150.0" text="End Date" />
+                <TableColumn fx:id="rentalModelColumn" prefWidth="100.0" text="Модель" />
+                <TableColumn fx:id="rentalStoreColumn" prefWidth="100.0" text="Магазин" />
+                <TableColumn fx:id="rentalStartDateColumn" prefWidth="150.0" text="Дата аренды" />
+                <TableColumn fx:id="rentalEndDateColumn" prefWidth="150.0" text="Дата возврата" />
             </columns>
         </TableView>
-      <Button layoutX="352.0" layoutY="574.0" mnemonicParsing="false" text="Главное меню" onAction="#exitToMainMenu" />
+        <Button layoutX="956.0" layoutY="60.0" mnemonicParsing="false" onAction="#exitToMainMenu" prefHeight="41.0" prefWidth="131.0" style="-fx-background-color: #7B28FC; -fx-background-radius: 100;" text="Главное меню" textFill="WHITE" AnchorPane.rightAnchor="89.0" AnchorPane.topAnchor="42.0">
+         <font>
+            <Font name="Gilroy-Regular" size="15.0" />
+         </font></Button>
     </children>
 </AnchorPane>

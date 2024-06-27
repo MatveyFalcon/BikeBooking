@@ -44,6 +44,30 @@ public class Model {
         return bikeModels;
     }
 
+    public void confirmReturn(Rental rental, String currentDate) {
+        String query = "UPDATE rentals SET return_date = ? WHERE rent_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, currentDate);
+            statement.setInt(2, rental.getRentId());
+            System.out.println(rental.getRentId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteBooking(int bookingId) {
+        String query = "DELETE FROM bookings WHERE booking_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, bookingId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Пример метода для извлечения всех хранилищ
     public List<Store> getAllStores() {
         List<Store> stores = new ArrayList<>();
@@ -62,6 +86,35 @@ public class Model {
         return stores;
     }
 
+    public Client login(int id) {
+        String query = "SELECT * FROM clients WHERE client_id = ?";
+        Client client = null;
+
+        try (PreparedStatement checkStatement = connection.prepareStatement(query)) {
+            checkStatement.setInt(1, id);
+
+            try (ResultSet resultSet = checkStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    client = new Client(
+                            resultSet.getInt("client_id"),
+                            resultSet.getString("first_name"),
+                            resultSet.getString("last_name"),
+                            resultSet.getString("middle_name"),
+                            resultSet.getString("passport_number"),
+                            resultSet.getString("passport_series"),
+                            resultSet.getString("address"),
+                            resultSet.getString("password"),
+                            resultSet.getBoolean("is_admin")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return client;
+    }
+
     public int getClientId(String passportNumber, String passportSeries, String password) {
         String query = "SELECT client_id FROM clients WHERE passport_number = ? AND passport_series = ? AND password = ?";
         try (PreparedStatement checkStatement = connection.prepareStatement(query)) {
@@ -71,7 +124,7 @@ public class Model {
 
             try (ResultSet resultSet = checkStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    this.client.setClientId(resultSet.getInt(1));
+                    this.client = login(resultSet.getInt(1));
                     return resultSet.getInt(1);
                 }
             }
@@ -121,23 +174,7 @@ public class Model {
     }
 
 
-    // Примерный способ бронирования велосипеда
-    public boolean bookBike(int clientId, int modelId, int storeId, String bookingDate) {
-        String query = "INSERT INTO Бронирования (client_id, model_id, store_id, Дата_бронирования) VALUES (?, ?, ?, ?)";
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, clientId);
-            statement.setInt(2, modelId);
-            statement.setInt(3, storeId);
-            statement.setString(4, bookingDate);
-
-            int rowsAffected = statement.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
     // Закрытие подключения к базе данных
     public void close() {
@@ -195,7 +232,16 @@ public class Model {
     }
 
     private int getBookingCount(int modelId, int storeId, String bookingDate) {
-        String query = "SELECT COUNT(*) AS booking_count FROM bookings WHERE model_id = ? AND store_id = ? AND booking_date BETWEEN DATE_SUB(?, INTERVAL 7 DAY) AND ?";
+        String query = "SELECT COUNT(*) AS booking_count " +
+                "FROM bookings b " +
+                "WHERE b.model_id = ? AND b.store_id = ? " +
+                "AND b.booking_date BETWEEN DATE_SUB(?, INTERVAL 7 DAY) AND ? " +
+                "AND NOT EXISTS ( " +
+                "    SELECT 1 " +
+                "    FROM rentals r " +
+                "    WHERE r.booking_id = b.booking_id " +
+                "    AND r.return_date IS NOT NULL" +
+                ")";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, modelId);
             statement.setInt(2, storeId);
@@ -212,10 +258,68 @@ public class Model {
         return 0;
     }
 
+
+
+    public List<String> getAllUsersForComboBox() {
+        List<String> users = new ArrayList<>();
+        String query = "SELECT first_name, last_name FROM clients";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String user = resultSet.getString("first_name") + " " + resultSet.getString("last_name");
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    public int getUserIdByName(String firstName, String lastName) {
+        String query = "SELECT client_id FROM clients WHERE first_name = ? AND last_name = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, firstName);
+            statement.setString(2, lastName);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("client_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Возвращаем -1, если пользователь не найден
+    }
+
+    public List<Rental> getRentalsByUserId(int userId) {
+        List<Rental> rentals = new ArrayList<>();
+        String query = "SELECT r.* FROM rentals r " +
+                "JOIN bookings b ON r.booking_id = b.booking_id " +
+                "WHERE b.client_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Rental rental = new Rental();
+                    rental.setBikeId(resultSet.getInt("bike_id"));
+                    rental.setStartDate(resultSet.getString("rental_start"));
+                    rental.setEndDate(resultSet.getString("return_date"));
+                    rental.setRentId(resultSet.getInt("rent_id"));
+                    rental.setBookingId(resultSet.getInt("booking_id"));
+                    rentals.add(rental);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rentals;
+    }
+
+
     private boolean isBikeAvailable(int modelId, String bookingDate, int storeId) {
         int bikeCount = getBikeCount(modelId, storeId);
         int bookingCount = getBookingCount(modelId, storeId, bookingDate);
-        System.out.println("Байков: " + bikeCount +  " Бронирований: " + bookingCount);
+        System.out.println("Байков: " + bikeCount + " Бронирований: " + bookingCount);
         return bookingCount < bikeCount;
     }
 
@@ -243,7 +347,14 @@ public class Model {
                 "FROM bookings b " +
                 "JOIN models m ON b.model_id = m.model_id " +
                 "JOIN stores s ON b.store_id = s.store_id " +
-                "WHERE b.client_id = ?";
+                "WHERE b.client_id = ? " +
+                "AND NOT EXISTS ( " +
+                "    SELECT 1 " +
+                "    FROM rentals r " +
+                "    WHERE r.booking_id = b.booking_id " +
+                "    AND r.return_date IS NOT NULL" +
+                ")";
+
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
@@ -294,7 +405,7 @@ public class Model {
     private boolean isBikeAvailableRentals(int modelId, String bookingDate, int storeId) {
         int bikeCount = getBikeCount(modelId, storeId);
         int bookingCount = getBookingCount(modelId, storeId, bookingDate);
-        System.out.println("Байков: " + bikeCount +  " Бронирований: " + bookingCount);
+        System.out.println("Байков: " + bikeCount + " Бронирований: " + bookingCount);
         return bookingCount <= bikeCount;
     }
 
@@ -337,5 +448,24 @@ public class Model {
         }
         return false;
     }
-}
 
+    public void updateClientInDatabase() {
+        String sql = "UPDATE clients SET first_name = ?, last_name = ?, middle_name = ?, passport_number = ?, passport_series = ?, address = ?, password = ? WHERE client_id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setString(1, this.client.getFirstName());
+            pstmt.setString(2, this.client.getLastName());
+            pstmt.setString(3, this.client.getMiddleName());
+            pstmt.setString(4, this.client.getPassportNumber());
+            pstmt.setString(5, this.client.getPassportSeries());
+            pstmt.setString(6, this.client.getAddress());
+            pstmt.setString(7, this.client.getPassword());
+            pstmt.setInt(8, this.client.getClientId());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}

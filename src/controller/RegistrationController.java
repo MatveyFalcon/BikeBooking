@@ -58,7 +58,7 @@ public class RegistrationController {
         String passportSeries = passportSeriesField.getText();
         String passportNumber = passportNumberField.getText();
         String password = passwordField.getText();
-
+        // создаем клиента
         Client client = new Client(
                 0,
                 firstName,
@@ -70,6 +70,7 @@ public class RegistrationController {
                 password,
                 false);
 
+        // если клиент не зарегистрирован, то ошибку кидаем
         if(!model.register(client)) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Ошибка");
@@ -77,6 +78,7 @@ public class RegistrationController {
             alert.showAndWait();
         }
         else{
+            // иначе переключаемся на главный экран
             switchToMainMenu();
         }
     }
