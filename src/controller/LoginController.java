@@ -31,7 +31,6 @@ public class LoginController {
     public void initModel(Model model, Stage primaryStage) {
         this.model = model;
         this.primaryStage = primaryStage;
-
     }
     @FXML
     private void handleLogin() throws IOException {

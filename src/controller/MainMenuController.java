@@ -40,6 +40,17 @@ public class MainMenuController {
         primaryStage.show();
     }
 
+    public void showEditProfile() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EditProfileView.fxml"));
+
+        Parent root = loader.load();
+        EditProfileController controller = loader.getController();
+        controller.initModel(model, primaryStage);
+        primaryStage.setScene(new Scene(root, 1280, 720));
+
+        primaryStage.show();
+    }
+
     public void exit() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginView.fxml"));
 

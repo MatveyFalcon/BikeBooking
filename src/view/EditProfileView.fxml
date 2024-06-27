@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.EditProfileController"
+            prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <VBox alignment="CENTER" spacing="10">
+            <TextField fx:id="firstNameField" promptText="First Name"/>
+            <TextField fx:id="lastNameField" promptText="Last Name"/>
+            <TextField fx:id="middleNameField" promptText="Middle Name"/>
+            <TextField fx:id="passportNumberField" promptText="Passport Number"/>
+            <TextField fx:id="passportSeriesField" promptText="Passport Series"/>
+            <TextField fx:id="addressField" promptText="Address"/>
+            <PasswordField fx:id="passwordField" promptText="Password"/>
+            <Button text="Save" onAction="#handleSaveButton"/>
+        </VBox>
+    </children>
+</AnchorPane>

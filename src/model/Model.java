@@ -62,6 +62,35 @@ public class Model {
         return stores;
     }
 
+    public Client login(int id) {
+        String query = "SELECT * FROM clients WHERE client_id = ?";
+        Client client = null;
+
+        try (PreparedStatement checkStatement = connection.prepareStatement(query)) {
+            checkStatement.setInt(1, id);
+
+            try (ResultSet resultSet = checkStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    client = new Client(
+                            resultSet.getInt("client_id"),
+                            resultSet.getString("first_name"),
+                            resultSet.getString("last_name"),
+                            resultSet.getString("middle_name"),
+                            resultSet.getString("passport_number"),
+                            resultSet.getString("passport_series"),
+                            resultSet.getString("address"),
+                            resultSet.getString("password"),
+                            resultSet.getBoolean("is_admin")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return client;
+    }
+
     public int getClientId(String passportNumber, String passportSeries, String password) {
         String query = "SELECT client_id FROM clients WHERE passport_number = ? AND passport_series = ? AND password = ?";
         try (PreparedStatement checkStatement = connection.prepareStatement(query)) {
@@ -71,7 +100,7 @@ public class Model {
 
             try (ResultSet resultSet = checkStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    this.client.setClientId(resultSet.getInt(1));
+                    this.client = login(resultSet.getInt(1));
                     return resultSet.getInt(1);
                 }
             }
@@ -337,5 +366,23 @@ public class Model {
         }
         return false;
     }
-}
+    public void updateClientInDatabase() {
+       String sql = "UPDATE clients SET first_name = ?, last_name = ?, middle_name = ?, passport_number = ?, passport_series = ?, address = ?, password = ? WHERE client_id = ?";
 
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setString(1, this.client.getFirstName());
+            pstmt.setString(2, this.client.getLastName());
+            pstmt.setString(3, this.client.getMiddleName());
+            pstmt.setString(4, this.client.getPassportNumber());
+            pstmt.setString(5, this.client.getPassportSeries());
+            pstmt.setString(6, this.client.getAddress());
+            pstmt.setString(7, this.client.getPassword());
+            pstmt.setInt(8, this.client.getClientId());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
