@@ -7,14 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
-import model.Client;
 import model.Model;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 public class EditProfileController {
 
@@ -33,42 +28,40 @@ public class EditProfileController {
     @FXML
     private PasswordField passwordField;
 
-    private Model model;
     private Stage primaryStage;
 
-    public void initModel(Model model, Stage primaryStage) {
-        this.model = model;
+    public void init(Stage primaryStage) {
         this.primaryStage = primaryStage;
         populateFields();
     }
 
     private void populateFields() {
-        firstNameField.setText(model.getClient().getFirstName());
-        lastNameField.setText(model.getClient().getLastName());
-        middleNameField.setText(model.getClient().getMiddleName());
-        passportNumberField.setText(model.getClient().getPassportNumber());
-        passportSeriesField.setText(model.getClient().getPassportSeries());
-        addressField.setText(model.getClient().getAddress());
-        passwordField.setText(model.getClient().getPassword());
+        firstNameField.setText(Model.getInstance().getClient().getFirstName());
+        lastNameField.setText(Model.getInstance().getClient().getLastName());
+        middleNameField.setText(Model.getInstance().getClient().getMiddleName());
+        passportNumberField.setText(Model.getInstance().getClient().getPassportNumber());
+        passportSeriesField.setText(Model.getInstance().getClient().getPassportSeries());
+        addressField.setText(Model.getInstance().getClient().getAddress());
+        passwordField.setText(Model.getInstance().getClient().getPassword());
     }
 
     @FXML
     private void handleSaveButton() throws IOException {
-        model.getClient().setFirstName(firstNameField.getText());
-        model.getClient().setLastName(lastNameField.getText());
-        model.getClient().setMiddleName(middleNameField.getText());
-        model.getClient().setPassportNumber(passportNumberField.getText());
-        model.getClient().setPassportSeries(passportSeriesField.getText());
-        model.getClient().setAddress(addressField.getText());
-        model.getClient().setPassword(passwordField.getText());
+        Model.getInstance().getClient().setFirstName(firstNameField.getText());
+        Model.getInstance().getClient().setLastName(lastNameField.getText());
+        Model.getInstance().getClient().setMiddleName(middleNameField.getText());
+        Model.getInstance().getClient().setPassportNumber(passportNumberField.getText());
+        Model.getInstance().getClient().setPassportSeries(passportSeriesField.getText());
+        Model.getInstance().getClient().setAddress(addressField.getText());
+        Model.getInstance().getClient().setPassword(passwordField.getText());
 
-        model.updateClientInDatabase();
+        Model.getInstance().updateClientInDatabase();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainMenuView.fxml"));
 
         Parent root = loader.load();
         MainMenuController controller = loader.getController();
-        controller.initModel(model, primaryStage);
+        controller.init(primaryStage);
         primaryStage.setScene(new Scene(root, 1280, 720));
 
         primaryStage.show();

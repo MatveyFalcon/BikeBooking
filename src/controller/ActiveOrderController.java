@@ -11,7 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.Model;
-import model.Rental;
+import model.rental.Rental;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -40,15 +40,13 @@ public class ActiveOrderController {
     @FXML
     private TableColumn<Rental, Integer> rentId;
 
-    private Model model;
     private Stage primaryStage;
 
     @FXML
-    public void initModel(Model model, Stage primaryStage) {
-        this.model = model;
+    public void init(Stage primaryStage) {
         this.primaryStage = primaryStage;
         ObservableList<String> users = FXCollections.observableArrayList(
-                model.getAllUsersForComboBox()
+                Model.getInstance().getAllUsersForComboBox()
         );
         userComboBox.setItems(users);
         bikeIdColumn.setCellValueFactory(new PropertyValueFactory<>("bikeId"));
@@ -66,7 +64,7 @@ public class ActiveOrderController {
             public TableCell<Rental, Void> call(final TableColumn<Rental, Void> param) {
                 final TableCell<Rental, Void> cell = new TableCell<>() {
 
-                    private final Button btn = new Button("Подтвердить возврат");
+                    private final Button btn = new Button("Подтвердить");
 
                     {
                         btn.setOnAction(event -> {
@@ -94,7 +92,7 @@ public class ActiveOrderController {
 
     private void confirmReturn(Rental rental) {
         String currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        model.confirmReturn(rental, currentDate);
+        Model.getInstance().confirmReturn(rental, currentDate);
         rental.setEndDate(currentDate);
         rentalsTable.refresh();
     }
@@ -105,7 +103,7 @@ public class ActiveOrderController {
 
         Parent root = loader.load();
         MainMenuController controller = loader.getController();
-        controller.initModel(model, primaryStage);
+        controller.init(primaryStage);
         primaryStage.setScene(new Scene(root, 1280, 720));
 
         primaryStage.show();
@@ -119,9 +117,9 @@ public class ActiveOrderController {
             String firstName = nameParts[0];
             String lastName = nameParts[1];
 
-            int userId = model.getUserIdByName(firstName, lastName);
+            int userId = Model.getInstance().getUserIdByName(firstName, lastName);
 
-            ObservableList<Rental> rentals = FXCollections.observableArrayList(model.getRentalsByUserId(userId));
+            ObservableList<Rental> rentals = FXCollections.observableArrayList(Model.getInstance().getRentalsByUserId(userId));
             rentalsTable.setItems(rentals);
         }
     }

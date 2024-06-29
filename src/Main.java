@@ -1,13 +1,10 @@
-
-
 import controller.LoginController;
-import model.Model;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import controller.MainMenuController;
+import model.Model;
 
 public class Main extends Application {
     @Override
@@ -17,9 +14,7 @@ public class Main extends Application {
         Parent root = loader.load();
 
         LoginController controller = loader.getController();
-        Model model = new Model();
-        controller.initModel(model, primaryStage);
-        model.getAllBikeModels();
+        controller.init(primaryStage);
         primaryStage.setTitle("Прокат велосипедов");
         primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.show();

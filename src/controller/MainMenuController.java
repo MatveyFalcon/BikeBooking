@@ -12,14 +12,12 @@ import javafx.scene.control.Button;
 import java.io.IOException;
 
 public class MainMenuController {
-    private Model model;
     private Stage primaryStage;
     @FXML
     private Button activeOrder;
-    public void initModel(Model model, Stage primaryStage) {
-        this.model = model;
+    public void init(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        activeOrder.setVisible(model.getClient().isAdmin());
+        activeOrder.setVisible(Model.getInstance().getClient().isAdmin());
     }
 
     public void showMyOrdersView() throws IOException {
@@ -27,7 +25,7 @@ public class MainMenuController {
 
         Parent root = loader.load();
         MyOrdersController controller = loader.getController();
-        controller.initModel(model, primaryStage);
+        controller.init(primaryStage);
         primaryStage.setScene(new Scene(root, 1280, 720));
 
         primaryStage.show();
@@ -37,7 +35,7 @@ public class MainMenuController {
 
         Parent root = loader.load();
         BookingController controller = loader.getController();
-        controller.initModel(model, primaryStage);
+        controller.init(primaryStage);
         primaryStage.setScene(new Scene(root, 1280, 720));
 
         primaryStage.show();
@@ -48,7 +46,7 @@ public class MainMenuController {
 
         Parent root = loader.load();
         EditProfileController controller = loader.getController();
-        controller.initModel(model, primaryStage);
+        controller.init(primaryStage);
         primaryStage.setScene(new Scene(root, 1280, 720));
 
         primaryStage.show();
@@ -59,7 +57,7 @@ public class MainMenuController {
 
         Parent root = loader.load();
         LoginController controller = loader.getController();
-        controller.initModel(model, primaryStage);
+        controller.init(primaryStage);
         primaryStage.setScene(new Scene(root, 1280, 720));
 
         primaryStage.show();
@@ -70,7 +68,7 @@ public class MainMenuController {
 
         Parent root = loader.load();
         ActiveOrderController controller = loader.getController();
-        controller.initModel(model, primaryStage);
+        controller.init(primaryStage);
         primaryStage.setScene(new Scene(root, 1280, 720));
 
         primaryStage.show();

@@ -25,17 +25,15 @@ public class LoginController {
 
     private Stage primaryStage;
 
-    private Model model;
 
     @FXML
-    public void initModel(Model model, Stage primaryStage) {
-        this.model = model;
+    public void init(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
     @FXML
     private void handleLogin() throws IOException {
         // запускается при нажатии кнопки входа
-        int id = model.getClientId(passportNumberField.getText(), passportSeriesField.getText(), passwordField.getText());
+        int id = Model.getInstance().getClientId(passportNumberField.getText(), passportSeriesField.getText(), passwordField.getText());
         // id выбирается из модели путем запроса к таблице клиентов и выборки среди них подходящего по входным данным
         if(id == -1){
             // если нет, то метод вернет -1, в случае если он сделал, выбрасываем окно с уведомлением о том что данные не верны
@@ -56,7 +54,7 @@ public class LoginController {
 
         Parent root = loader.load();
         MainMenuController controller = loader.getController();
-        controller.initModel(model, primaryStage);
+        controller.init(primaryStage);
         primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.show();
     }
@@ -67,7 +65,7 @@ public class LoginController {
 
         Parent root = loader.load();
         RegistrationController controller = loader.getController();
-        controller.initModel(model, primaryStage);
+        controller.init(primaryStage);
         primaryStage.setScene(new Scene(root, 1280, 720));
 
         primaryStage.show();

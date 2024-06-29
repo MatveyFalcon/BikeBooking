@@ -71,7 +71,7 @@
          <font>
             <Font name="Gilroy-Regular" size="15.0" />
          </font></Button>
-        <Button layoutX="901.0" layoutY="164.0" mnemonicParsing="false" onAction="#exitToMainMenu" prefHeight="45.0" prefWidth="199.0" style="-fx-background-color: #7B28FC; -fx-background-radius: 100;" text="Главное меню" textFill="WHITE" AnchorPane.rightAnchor="89.0" AnchorPane.topAnchor="42.0">
+        <Button layoutX="901.0" layoutY="164.0" mnemonicParsing="false" onAction="#exitToMainMenu" prefHeight="41.0" prefWidth="131.0" style="-fx-background-color: #7B28FC; -fx-background-radius: 100;" text="Главное меню" textFill="WHITE" AnchorPane.rightAnchor="89.0" AnchorPane.topAnchor="42.0">
          <font>
             <Font name="Gilroy-Semibold" size="15.0" />
          </font></Button>

@@ -15,9 +15,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import model.Booking;
+import model.booking.Booking;
 import model.Model;
-import model.Rental;
+import model.rental.Rental;
 
 import java.io.IOException;
 
@@ -53,10 +53,7 @@ public class MyOrdersController {
     @FXML
     private TableColumn<Rental, String> rentalEndDateColumn;
 
-    private Model model;
 
-    private ObservableList<Booking> bookingList;
-    private ObservableList<Rental> rentalList;
     private Stage primaryStage;
 
     @FXML
@@ -72,20 +69,19 @@ public class MyOrdersController {
         rentalEndDateColumn.setCellValueFactory(new PropertyValueFactory<>("endDate"));
     }
 
-    public void initModel(Model model, Stage primaryStage) {
-        this.model = model;
+    public void init(Stage primaryStage) {
         this.primaryStage = primaryStage;
         loadBookings();
         loadRentals();
     }
 
     private void loadBookings() {
-        bookingList = FXCollections.observableArrayList(model.getBookingsForUser(model.getClient().getClientId()));
+        ObservableList<Booking> bookingList = FXCollections.observableArrayList(Model.getInstance().getBookingsForUser(Model.getInstance().getClient().getClientId()));
         bookingTable.setItems(bookingList);
     }
 
     private void loadRentals() {
-        rentalList = FXCollections.observableArrayList(model.getRentalsForUser(model.getClient().getClientId()));
+        ObservableList<Rental> rentalList = FXCollections.observableArrayList(Model.getInstance().getRentalsForUser(Model.getInstance().getClient().getClientId()));
         rentalTable.setItems(rentalList);
     }
 
@@ -94,7 +90,7 @@ public class MyOrdersController {
             @Override
             public TableCell<Booking, Void> call(final TableColumn<Booking, Void> param) {
                 final TableCell<Booking, Void> cell = new TableCell<>() {
-                    private final Button btn = new Button("Confirm");
+                    private final Button btn = new Button("Подтвердить");
 
                     {
                         btn.setOnAction(event -> {
@@ -120,16 +116,16 @@ public class MyOrdersController {
 
     private void handleConfirmPickup(Booking booking) {
         if (booking != null) {
-            boolean success = model.confirmPickup(booking.getBookingId());
+            boolean success = Model.getInstance().confirmPickup(booking.getBookingId());
             if (success) {
-                showAlert("Pickup confirmed");
+                showAlert("Подтверждено");
                 loadBookings(); // Refresh the booking list
                 loadRentals(); // Refresh the rental list
             } else {
-                showAlert("Pickup confirmation failed");
+                showAlert("Ошибка в подтверждении");
             }
         } else {
-            showAlert("Please select a booking to confirm pickup.");
+            showAlert("Выберите бронирование для подтверждения");
         }
     }
 
@@ -144,7 +140,7 @@ public class MyOrdersController {
 
         Parent root = loader.load();
         MainMenuController controller = loader.getController();
-        controller.initModel(model, primaryStage);
+        controller.init(primaryStage);
         primaryStage.setScene(new Scene(root, 1280, 720));
 
         primaryStage.show();

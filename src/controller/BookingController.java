@@ -9,9 +9,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
-import model.BikeModel;
+import model.bikes.Bike;
 import model.Model;
-import model.Store;
+import model.store.Store;
 
 import java.io.IOException;
 
@@ -21,30 +21,28 @@ public class BookingController {
     private DatePicker bookingDate;
 
     @FXML
-    private ComboBox<BikeModel> bikeModel;
+    private ComboBox<Bike> bikeModel;
 
     @FXML
     private ComboBox<Store> store;
 
     private Stage primaryStage;
 
-    private Model model;
 
     @FXML
-    public void initModel(Model model, Stage primaryStage) {
-        this.model = model;
+    public void init(Stage primaryStage) {
         this.primaryStage = primaryStage;
         // Инициализация моделей велосипеда
-        bikeModel.getItems().addAll(model.getAllBikeModels());
+        bikeModel.getItems().addAll(Model.getInstance().getAllBikeModels());
 
         // Инициализация магазинов
-        store.getItems().addAll(model.getAllStores());
+        store.getItems().addAll(Model.getInstance().getAllStores());
     }
 
     @FXML
     private void handleBooking() {
         String _date = bookingDate.getValue() != null ? bookingDate.getValue().toString() : "не выбрано";
-        BikeModel selectedBikeModel = bikeModel.getValue();
+        Bike selectedBikeModel = bikeModel.getValue();
         String _bikeModel = selectedBikeModel != null ? selectedBikeModel.getName() : "не выбрано";
         int modelId = selectedBikeModel != null ? selectedBikeModel.getId() : -1;
         Store selectedStore = store.getValue();
@@ -52,7 +50,7 @@ public class BookingController {
         String _address = selectedStore != null ? selectedStore.getAddress() : "не выбрано";
 
         if (modelId != -1 && selectedStore != null) {
-            if(model.bookBike(modelId, selectedStore.getId(), _date)){
+            if(Model.getInstance().bookBike(modelId, selectedStore.getId(), _date)){
                 // Показ уведомления пользователю
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Бронирование");
@@ -78,7 +76,7 @@ public class BookingController {
 
         Parent root = loader.load();
         MainMenuController controller = loader.getController();
-        controller.initModel(model, primaryStage);
+        controller.init(primaryStage);
         primaryStage.setScene(new Scene(root, 1280, 720));
 
         primaryStage.show();

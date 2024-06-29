@@ -8,7 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
-import model.Client;
+import model.client.Client;
 import model.Model;
 
 import java.io.IOException;
@@ -38,11 +38,9 @@ public class RegistrationController {
 
     private Stage primaryStage;
 
-    private Model model;
 
     @FXML
-    public void initModel(Model model, Stage primaryStage) {
-        this.model = model;
+    public void init(Stage primaryStage) {
         this.primaryStage = primaryStage;
 
     }
@@ -50,7 +48,6 @@ public class RegistrationController {
 
     @FXML
     private void handleRegister() throws IOException {
-        // Получаем данные из полей ввода
         String address = addressField.getText();
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
@@ -58,7 +55,6 @@ public class RegistrationController {
         String passportSeries = passportSeriesField.getText();
         String passportNumber = passportNumberField.getText();
         String password = passwordField.getText();
-        // создаем клиента
         Client client = new Client(
                 0,
                 firstName,
@@ -70,15 +66,13 @@ public class RegistrationController {
                 password,
                 false);
 
-        // если клиент не зарегистрирован, то ошибку кидаем
-        if(!model.register(client)) {
+        if(!Model.getInstance().register(client)) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Ошибка");
             alert.setHeaderText("Пользователь уже существует");
             alert.showAndWait();
         }
         else{
-            // иначе переключаемся на главный экран
             switchToMainMenu();
         }
     }
@@ -88,7 +82,7 @@ public class RegistrationController {
 
         Parent root = loader.load();
         MainMenuController controller = loader.getController();
-        controller.initModel(model, primaryStage);
+        controller.init(primaryStage);
         primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.show();
     }
@@ -99,7 +93,7 @@ public class RegistrationController {
 
         Parent root = loader.load();
         LoginController controller = loader.getController();
-        controller.initModel(model, primaryStage);
+        controller.init(primaryStage);
         primaryStage.setScene(new Scene(root, 1280, 720));
 
         primaryStage.show();

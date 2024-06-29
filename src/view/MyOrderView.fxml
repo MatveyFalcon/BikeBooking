@@ -41,24 +41,24 @@
          <font>
             <Font name="Gilroy-Bold" size="25.0" />
          </font></Label>
-        <TableView fx:id="bookingTable" layoutX="388.36362289554864" layoutY="146.0" prefHeight="220.0" prefWidth="502.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #c8c8c8;" AnchorPane.leftAnchor="388.36362289554864" AnchorPane.rightAnchor="389.2363501380105">
+        <TableView fx:id="bookingTable" layoutX="414.6727129269439" layoutY="146.0" prefHeight="223.0" prefWidth="452.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #c8c8c8;" AnchorPane.leftAnchor="414.6727129269439" AnchorPane.rightAnchor="413.54544016940577">
             <columns>
                 <TableColumn fx:id="bookingModelColumn" prefWidth="100.0" text="Модель" />
                 <TableColumn fx:id="bookingStoreColumn" prefWidth="100.0" text="Магазин" />
                 <TableColumn fx:id="bookingDateColumn" prefWidth="150.0" text="Дата бронирования" />
-                <TableColumn fx:id="confirmPickupColumn" prefWidth="150.0" text="Подтвердить" />
+                <TableColumn fx:id="confirmPickupColumn" prefWidth="100.0" text="Подтвердить" />
             </columns>
         </TableView>
         <Label layoutX="593.0" layoutY="380.0" prefHeight="31.0" prefWidth="117.0" text="Аренды" AnchorPane.leftAnchor="593.0" AnchorPane.rightAnchor="571.0">
          <font>
             <Font name="Gilroy-Bold" size="25.0" />
          </font></Label>
-        <TableView fx:id="rentalTable" layoutX="388.36362289554864" layoutY="418.0" prefHeight="220.0" prefWidth="502.0" AnchorPane.leftAnchor="388.36362289554864" AnchorPane.rightAnchor="389.2363501380105">
+        <TableView fx:id="rentalTable" layoutX="413.5454401694058" layoutY="418.0" prefHeight="222.0" prefWidth="453.0" AnchorPane.leftAnchor="413.5454401694058" AnchorPane.rightAnchor="413.79998568448195">
             <columns>
                 <TableColumn fx:id="rentalModelColumn" prefWidth="100.0" text="Модель" />
                 <TableColumn fx:id="rentalStoreColumn" prefWidth="100.0" text="Магазин" />
-                <TableColumn fx:id="rentalStartDateColumn" prefWidth="150.0" text="Дата аренды" />
-                <TableColumn fx:id="rentalEndDateColumn" prefWidth="150.0" text="Дата возврата" />
+                <TableColumn fx:id="rentalStartDateColumn" prefWidth="120.0" text="Дата аренды" />
+                <TableColumn fx:id="rentalEndDateColumn" prefWidth="130.0" text="Дата возврата" />
             </columns>
         </TableView>
         <Button layoutX="956.0" layoutY="60.0" mnemonicParsing="false" onAction="#exitToMainMenu" prefHeight="41.0" prefWidth="131.0" style="-fx-background-color: #7B28FC; -fx-background-radius: 100;" text="Главное меню" textFill="WHITE" AnchorPane.rightAnchor="89.0" AnchorPane.topAnchor="42.0">
